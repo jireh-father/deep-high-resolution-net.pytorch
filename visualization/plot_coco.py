@@ -94,7 +94,7 @@ def parse_args():
     parser.add_argument('--image-path',
                         help='Path of COCO val images',
                         type=str,
-                        default='data/coco/images/val2017/'
+                        default='data/coco/images/'
                         )
 
     parser.add_argument('--gt-anno',
@@ -169,10 +169,10 @@ def plot(data, gt_file, img_path, save_path,
             sum_score = 0
             num_box = 0
             img_name = str(imgId).zfill(12)
+            img_name = "{}_face".format(imgId)
             
             # Read Images
             img_file = img_path + img_name + '.jpg'
-            print(img_file)
             data_numpy = cv2.imread(img_file, cv2.IMREAD_COLOR | cv2.IMREAD_IGNORE_ORIENTATION)
             h = data_numpy.shape[0]
             w = data_numpy.shape[1]
