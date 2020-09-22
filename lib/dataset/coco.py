@@ -154,6 +154,7 @@ class COCODataset(JointsDataset):
         im_ann = self.coco.loadImgs(index)[0]
         width = im_ann['width']
         height = im_ann['height']
+        file_name = im_ann['file_name']
 
         annIds = self.coco.getAnnIds(imgIds=index, iscrowd=False)
         objs = self.coco.loadAnns(annIds)
@@ -196,7 +197,7 @@ class COCODataset(JointsDataset):
 
             center, scale = self._box2cs(obj['clean_bbox'][:4])
             rec.append({
-                'image': self.image_path_from_index(index),
+                'image': self.image_path_from_filename(file_name),
                 'center': center,
                 'scale': scale,
                 'joints_3d': joints_3d,
@@ -228,18 +229,24 @@ class COCODataset(JointsDataset):
 
         return center, scale
 
+    def image_path_from_filename(self, file_name):
+        """ example: images / train2017 / 000000119993.jpg """
+        image_path = os.path.join(self.root, 'images', file_name)
+
+        return image_path
+
     def image_path_from_index(self, index):
         """ example: images / train2017 / 000000119993.jpg """
         file_name = '%012d.jpg' % index
         if '2014' in self.image_set:
             file_name = 'COCO_%s_' % self.image_set + file_name
 
-        prefix = 'test2017' if 'test' in self.image_set else self.image_set
+        # prefix = 'test2017' if 'test' in self.image_set else self.image_set
 
-        data_name = prefix + '.zip@' if self.data_format == 'zip' else prefix
+        # data_name = prefix + '.zip@' if self.data_format == 'zip' else prefix
 
-        image_path = os.path.join(
-            self.root, 'images', data_name, file_name)
+        image_path = os.path.join(self.root, 'images', file_name)
+        # image_path = os.path.join(self.root, 'images', data_name, file_name)
 
         return image_path
 
