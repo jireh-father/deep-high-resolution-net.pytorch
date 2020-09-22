@@ -88,16 +88,14 @@ class COCODataset(JointsDataset):
         logger.info('=> num_images: {}'.format(self.num_images))
 
         self.num_joints = 3
-        self.flip_pairs = [[1, 2], [3, 4], [5, 6], [7, 8],
-                           [9, 10], [11, 12], [13, 14], [15, 16]]
+        self.flip_pairs = [[0, 1], [0, 2], [1, 2]]
         self.parent_ids = None
         self.upper_body_ids = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
         self.lower_body_ids = (11, 12, 13, 14, 15, 16)
 
         self.joints_weight = np.array(
             [
-                1., 1., 1., 1., 1., 1., 1., 1.2, 1.2,
-                1.5, 1.5, 1., 1., 1.2, 1.2, 1.5, 1.5
+                1., 1., 1.
             ],
             dtype=np.float32
         ).reshape((self.num_joints, 1))
