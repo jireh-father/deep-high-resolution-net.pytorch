@@ -39,11 +39,7 @@ color1 = [(179,0,0),(228,26,28),(255,255,51),
     (44,127,184),(0,0,255)]
 
 link_pairs1 = [
-        [15, 13], [13, 11], [11, 5], 
-        [12, 14], [14, 16], [12, 6], 
-        [3, 1],[1, 2],[1, 0],[0, 2],[2,4],
-        [9, 7], [7,5], [5, 6],
-        [6, 8], [8, 10],
+        [0, 1], [0, 2], [1, 2]
         ]
 
 point_color1 = [(240,2,127),(240,2,127),(240,2,127), 
@@ -69,10 +65,7 @@ color2 = [(252,176,243),(252,176,243),(252,176,243),
     (169, 209, 142),(169, 209, 142)]
 
 link_pairs2 = [
-        [15, 13], [13, 11], [11, 5], 
-        [12, 14], [14, 16], [12, 6], 
-        [3, 1],[1, 2],[1, 0],[0, 2],[2,4],
-        [9, 7], [7,5], [5, 6], [6, 8], [8, 10],
+        [0, 1], [0, 2], [1, 2]
         ]
 
 point_color2 = [(240,2,127),(240,2,127),(240,2,127), 
@@ -182,7 +175,6 @@ def plot(data, gt_file, img_path, save_path,
             ax = plt.subplot(1,1,1)
             bk = plt.imshow(data_numpy[:,:,::-1])
             bk.set_zorder(-1)
-            print(img_name)
             for j, gt in enumerate(gts):
                 # matching dt_box and gt_box
                 bb = gt['bbox']
@@ -218,7 +210,7 @@ def plot(data, gt_file, img_path, save_path,
                         ref = min(dt_w, dt_h)
                         num_box += 1
                         sum_score += dt['score']
-                        dt_joints = np.array(dt['keypoints']).reshape(17,-1)
+                        dt_joints = np.array(dt['keypoints']).reshape(3,-1)
                         joints_dict = map_joint_dict(dt_joints)
                         
                         # stick 
