@@ -310,6 +310,7 @@ class COCODataset(JointsDataset):
         # person x (keypoints)
         _kpts = []
         for idx, kpt in enumerate(preds):
+            print("Debug", img_path[idx])
             _kpts.append({
                 'keypoints': kpt,
                 'center': all_boxes[idx][0:2],
