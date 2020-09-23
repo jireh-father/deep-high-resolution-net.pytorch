@@ -166,6 +166,7 @@ def plot(data, gt_file, img_path, save_path,
             
             # Read Images
             img_file = img_path + img_name + '.jpg'
+            print(img_file)
             data_numpy = cv2.imread(img_file, cv2.IMREAD_COLOR | cv2.IMREAD_IGNORE_ORIENTATION)
             h = data_numpy.shape[0]
             w = data_numpy.shape[1]
