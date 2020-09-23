@@ -435,9 +435,6 @@ class COCODataset(JointsDataset):
 
     def _do_python_keypoint_eval(self, res_file, res_folder):
         coco_dt = self.coco.loadRes(res_file)
-        print(coco_dt)
-        print(self.coco.anns)
-        print(coco_dt.anns)
         coco_eval = COCOeval(self.coco, coco_dt, 'keypoints')
         coco_eval.params.useSegm = None
         coco_eval.evaluate()
