@@ -37,7 +37,7 @@ MODEL:
   EXTRA:
     PRETRAINED_LAYERS:
     - 'conv1'
-    - 'bn1':q
+    - 'bn1'
     - 'conv2'
     - 'bn2'
     - 'layer1'
