@@ -235,7 +235,7 @@ def main():
         now = time.time()
         w = image_rgb.shape[1]
         h = image_rgb.shape[0]
-        pred_boxes = [[int(w * 0.1), int(h * 0.1)], [int(w * 0.9), int(h * 0.9)]]
+        pred_boxes = [[[int(w * 0.1), int(h * 0.1)], [int(w * 0.9), int(h * 0.9)]]]
         then = time.time()
         print("Find person bbox in: {} sec".format(then - now))
 
