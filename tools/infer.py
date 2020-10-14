@@ -1,4 +1,3 @@
-
 # ------------------------------------------------------------------------------
 # pose.pytorch
 # Copyright (c) 2018-present Microsoft
@@ -31,6 +30,14 @@ from utils.utils import create_logger
 
 import dataset
 import models
+import cv2
+
+cv2.setNumThreads(0)
+cv2.ocl.setUseOpenCL(False)
+
+import albumentations as al
+from albumentations.augmentations import functional as F
+import glob
 
 
 def parse_args():
@@ -63,8 +70,28 @@ def parse_args():
                         type=str,
                         default='')
 
+    parser.add_argument('--image_dir',
+                        help='prev Model directory',
+                        type=str,
+                        default='')
+
     args = parser.parse_args()
     return args
+
+
+def get_preprocessing():
+    import torch
+    def norm(img, **params):
+        return F.normalize(img, mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225), max_pixel_value=255.0)
+
+    def to_tensor(x, **kwargs):
+        return torch.from_numpy(x.transpose(2, 0, 1).astype('float32'))
+
+    _transform = [
+        al.Lambda(image=norm),
+        al.Lambda(image=to_tensor, mask=to_tensor)
+    ]
+    return al.Compose(_transform)
 
 
 def main():
@@ -82,7 +109,7 @@ def main():
     torch.backends.cudnn.deterministic = cfg.CUDNN.DETERMINISTIC
     torch.backends.cudnn.enabled = cfg.CUDNN.ENABLED
 
-    model = eval('models.'+cfg.MODEL.NAME+'.get_pose_net')(
+    model = eval('models.' + cfg.MODEL.NAME + '.get_pose_net')(
         cfg, is_train=False
     )
 
@@ -97,36 +124,20 @@ def main():
         model.load_state_dict(torch.load(model_state_file))
 
     model = torch.nn.DataParallel(model, device_ids=cfg.GPUS).cuda()
+    model.eval()
 
-    # define loss function (criterion) and optimizer
-    criterion = JointsMSELoss(
-        use_target_weight=cfg.LOSS.USE_TARGET_WEIGHT
-    ).cuda()
+    for image_path in glob.glob(os.path.join(args.image_dir, "*")):
+        with torch.no_grad():
+            test_im = cv2.cvtColor(cv2.imread(image_path), cv2.COLOR_BGR2RGB)
+            test_preprocess = get_preprocessing()
 
-    # Data loading code
-    normalize = transforms.Normalize(
-        mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
-    )
-    valid_dataset = eval('dataset.'+cfg.DATASET.DATASET)(
-        cfg, cfg.DATASET.ROOT, cfg.DATASET.TEST_SET, False,
-        transforms.Compose([
-            transforms.ToTensor(),
-            normalize,
-        ])
-    )
-    valid_loader = torch.utils.data.DataLoader(
-        valid_dataset,
-        batch_size=cfg.TEST.BATCH_SIZE_PER_GPU*len(cfg.GPUS),
-        shuffle=False,
-        num_workers=cfg.WORKERS,
-        pin_memory=True
-    )
-
-    # evaluate on validation set
-    validate(cfg, valid_loader, valid_dataset, model, criterion,
-             final_output_dir, tb_log_dir)
+            test_im = test_preprocess(image=test_im)['image']
+            test_im = torch.unsqueeze(test_im, 0).to('cuda')
+            ret = model(test_im)
+            print(ret)
+            print(ret.shape)
+        break
 
 
 if __name__ == '__main__':
     main()
-
