@@ -21,7 +21,7 @@ import numpy as np
 
 import sys
 
-sys.path.append("../lib")
+sys.path.append("lib")
 import time
 import glob
 # import _init_paths
