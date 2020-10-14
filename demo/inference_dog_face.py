@@ -254,11 +254,13 @@ def main():
         print("Find person pose in: {} sec".format(then - now))
         print(pose_preds)
         new_csv_row = []
+        cs = [(255,0,0), (0,255,0), (0,0,255)]
         for coords in pose_preds:
             # Draw each point on image
-            for coord in coords:
+            for cidx, coord in enumerate(coords):
                 x_coord, y_coord = int(coord[0]), int(coord[1])
-                cv2.circle(image_debug, (x_coord, y_coord), 20, (0, 0, 255), 10)
+                c = cs[cidx]
+                cv2.circle(image_debug, (x_coord, y_coord), 40, c, 20)
                 new_csv_row.extend([x_coord, y_coord])
 
         total_then = time.time()
