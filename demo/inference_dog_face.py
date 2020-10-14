@@ -251,7 +251,7 @@ def main():
         pose_preds = get_pose_estimation_prediction(pose_model, image_pose, centers, scales, transform=pose_transform)
         then = time.time()
         print("Find person pose in: {} sec".format(then - now))
-
+        print(pose_preds)
         new_csv_row = []
         for coords in pose_preds:
             # Draw each point on image
