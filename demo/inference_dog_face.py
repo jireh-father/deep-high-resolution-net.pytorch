@@ -257,7 +257,7 @@ def main():
             # Draw each point on image
             for coord in coords:
                 x_coord, y_coord = int(coord[0]), int(coord[1])
-                cv2.circle(image_debug, (x_coord, y_coord), 4, (255, 0, 0), 2)
+                cv2.circle(image_debug, (x_coord, y_coord), 20, (0, 0, 255), 10)
                 new_csv_row.extend([x_coord, y_coord])
 
         total_then = time.time()
