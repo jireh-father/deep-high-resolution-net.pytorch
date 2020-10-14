@@ -242,7 +242,6 @@ def main():
         # pose estimation : for multiple people
         centers = []
         scales = []
-        pred_boxes = [[]]
         for box in pred_boxes:
             center, scale = box_to_center_scale(box, cfg.MODEL.IMAGE_SIZE[0], cfg.MODEL.IMAGE_SIZE[1])
             centers.append(center)
