@@ -141,7 +141,7 @@ class JointsDataset(Dataset):
         s = db_rec['scale']
         score = db_rec['score'] if 'score' in db_rec else 1
         r = 0
-
+        print(c,s,r)
         if self.is_train:
             # if (np.sum(joints_vis[:, 0]) > self.num_joints_half_body
             #     and np.random.rand() < self.prob_half_body):
